@@ -92,6 +92,12 @@ export default function Hero() {
           { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'back.out(2)' },
           '-=0.8',
         )
+        .fromTo(
+          maskRef.current,
+          { x: 100, opacity: 0, scale: 0.95 },
+          { x: 0, opacity: 1, scale: 1, duration: 1.2, ease: 'back.out(1.5)' },
+          '-=1.2',
+        )
 
       gsap.to(webRef.current.children, {
         rotation: 360,
@@ -134,20 +140,21 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
-  // Cursor-following spotlight mask over the top hero layer.
+  // Subtle parallax tilt / floating effect for Luffy in the right corner
   useEffect(() => {
-    xTo.current = gsap.quickTo(spot, 'x', { duration: 0.3, ease: 'power4.out' })
-    yTo.current = gsap.quickTo(spot, 'y', { duration: 0.3, ease: 'power4.out' })
+    xTo.current = gsap.quickTo(spot, 'x', { duration: 0.5, ease: 'power3.out' })
+    yTo.current = gsap.quickTo(spot, 'y', { duration: 0.5, ease: 'power3.out' })
 
     const update = () => {
       if (!maskRef.current) return
-      const { x, y, alpha, size } = spot
-      const gradient = `radial-gradient(circle ${size}px at ${x}px ${y}px, rgba(0,0,0,${alpha}) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,1) 100%)`
-      maskRef.current.style.webkitMaskImage = gradient
-      maskRef.current.style.maskImage = gradient
+      const offsetX = (spot.x - window.innerWidth / 2) * 0.02
+      const offsetY = (spot.y - window.innerHeight / 2) * 0.02
+      gsap.set(maskRef.current, {
+        x: offsetX,
+        y: offsetY,
+      })
     }
 
-    update()
     gsap.ticker.add(update)
     return () => gsap.ticker.remove(update)
   }, [spot])
@@ -211,13 +218,16 @@ export default function Hero() {
           alt="Bottom Identity Layer"
           className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-10"
         />
-        <img
+        <div
           ref={maskRef}
-          src={HERO_MASK}
-          alt="Top Mask Layer"
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-20"
-          style={{ WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat' }}
-        />
+          className="absolute top-0 right-0 bottom-0 z-20 pointer-events-none flex items-end justify-end"
+        >
+          <img
+            src={HERO_MASK}
+            alt="Luffy Gear 5"
+            className="h-full max-h-screen w-auto object-contain object-right drop-shadow-[-15px_15px_30px_rgba(0,0,0,0.15)]"
+          />
+        </div>
 
         <div ref={webRef} className="absolute inset-0 pointer-events-none z-[25] overflow-hidden">
           <img
