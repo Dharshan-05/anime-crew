@@ -1,0 +1,17 @@
+node_modules
+dist
+dist-ssr
+
+# Downloaded production bundle of the reference site (analysis only)
+_site
+
+# Visual-regression output
+screenshots
+
+*.local
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.log
+npm-debug.log*

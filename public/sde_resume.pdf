@@ -1,0 +1,107 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R /F11 6 0 R /F13 7 0 R /F16 8 0 R /F22 9 0 R /F24 10 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 1228 >>
+stream
+BT
+/F1 12 Tf
+72 720 Td
+14 TL
+/FF24 22 Tf
+(SRI SUSHMITA) Tj
+T*
+/FF16 14 Tf
+(Full-Stack Engineer  |  AI & ML Undergraduate) Tj
+T*
+/FF11 11 Tf
+(Aditya Engineering College) Tj
+T*
+/FF11 11 Tf
+(PLACEHOLDER RESUME - replace public/sde_resume.pdf with your own.) Tj
+T*
+/FF11 11 Tf
+(Email: your.email@example.com   |   GitHub: github.com/your-handle) Tj
+T*
+/FF13 13 Tf
+(EXPERIENCE) Tj
+T*
+/FF11 11 Tf
+(Full-Stack Engineer, Technical Hub - Built containerized SaaS platforms,) Tj
+T*
+/FF11 11 Tf
+(designing for scale, reliability, and measurable outcomes.) Tj
+T*
+/FF11 11 Tf
+(AlgoUniversity Tech Fellowship - Advanced algorithms and problem solving.) Tj
+T*
+/FF13 13 Tf
+(PROJECTS) Tj
+T*
+/FF11 11 Tf
+(Multi-Tenant SaaS Platform  -  React, Node.js, PostgreSQL, Docker) Tj
+T*
+/FF11 11 Tf
+(Full-Stack Payment Gateway  -  Node.js, Express, MongoDB, REST APIs) Tj
+T*
+/FF11 11 Tf
+(Notice Hub University Portal  -  React, Tailwind CSS, Node.js) Tj
+T*
+/FF11 11 Tf
+(Productivity Suite Extension  -  JavaScript, Chrome APIs, Tailwind) Tj
+T*
+/FF13 13 Tf
+(SKILLS) Tj
+T*
+/FF11 11 Tf
+(React / Next.js, JavaScript / TypeScript, Node.js & Express, PostgreSQL,) Tj
+T*
+/FF11 11 Tf
+(MongoDB, Docker, Python / AI & ML, GSAP, Tailwind CSS, Git & GitHub) Tj
+T*
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+8 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+9 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+10 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000297 00000 n 
+0000001576 00000 n 
+0000001646 00000 n 
+0000001716 00000 n 
+0000001791 00000 n 
+0000001861 00000 n 
+0000001936 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+2012
+%%EOF

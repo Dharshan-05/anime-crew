@@ -1,0 +1,121 @@
+@import 'tailwindcss';
+@import 'aos/dist/aos.css';
+
+/*
+ * Tailwind's automatic source detection must not pick up the downloaded
+ * reference bundle in ../_site or the verification scripts in ../scripts —
+ * both contain class-name-like strings that would add unused utilities.
+ */
+@source not '../scripts';
+@source not '../_site';
+
+@theme {
+  --font-sans:
+    'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+:root {
+  color: #000;
+  background-color: #fafafa;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #fafafa;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Keep anchored sections clear of the fixed navbar. */
+section {
+  scroll-margin-top: 4.5rem;
+}
+
+@keyframes pulse-slow {
+  0%,
+  to {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes scan {
+  0% {
+    opacity: 0;
+    top: 0%;
+  }
+  5% {
+    opacity: 0.4;
+  }
+  95% {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 0;
+    top: 100%;
+  }
+}
+
+.animate-pulse-slow {
+  animation: 3s cubic-bezier(0.4, 0, 0.6, 1) infinite pulse-slow;
+}
+
+.animate-spin-slow {
+  animation: 24s linear infinite spin-slow;
+}
+
+@keyframes breathe {
+  0%,
+  to {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.breathing-glow {
+  animation: 8s ease-in-out infinite breathe;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fafafa;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e4e4e7;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d4d4d8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
