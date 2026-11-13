@@ -1,12 +1,34 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import JoystickController from './JoystickController.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const WEB = '/assets/web.png'
 const LUFFY_GEAR5 = '/assets/luffy-gear5.png'
 const PROJECT_STICK = '/assets/project-stick.png'
+
+// Default aligned coordinates (baked in for production / Vercel)
+export const DEFAULT_STICK_POS = {
+  x: 7,
+  y: 33,
+  scale: 0.86,
+  zIndex: 20,
+}
+
+export const DEFAULT_GEAR5_POS = {
+  x: 0,
+  y: 0,
+  scale: 1,
+}
+
+export const DEFAULT_FRUIT_POS = {
+  x: 0,
+  y: 0,
+  scale: 1,
+  opacity: 0.04,
+}
 
 const PROJECTS = [
   {
@@ -105,22 +127,30 @@ export default function Projects() {
     })
   }
 
-  // User aligned positions (saved from alignment tool)
-  const stickPos = (() => {
+  // User aligned positions (saved from alignment tool / joystick)
+  const [stickPos, setStickPos] = useState(() => {
     try {
       const saved = localStorage.getItem('anime_project_stick_pos')
       if (saved) return JSON.parse(saved)
     } catch {}
-    return { x: 0, y: 0, scale: 1, zIndex: 20 }
-  })()
+    return DEFAULT_STICK_POS
+  })
 
-  const gear5Pos = (() => {
+  const [gear5Pos, setGear5Pos] = useState(() => {
     try {
       const saved = localStorage.getItem('anime_project_gear5_pos')
       if (saved) return JSON.parse(saved)
     } catch {}
-    return { x: 0, y: 0, scale: 1 }
-  })()
+    return DEFAULT_GEAR5_POS
+  })
+
+  const [fruitPos, setFruitPos] = useState(() => {
+    try {
+      const saved = localStorage.getItem('anime_project_fruit_pos')
+      if (saved) return JSON.parse(saved)
+    } catch {}
+    return DEFAULT_FRUIT_POS
+  })
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -188,12 +218,18 @@ export default function Projects() {
       onMouseLeave={handleStickMouseLeave}
       className="relative w-full bg-white text-gray-900 py-16 px-6 md:px-16 lg:px-24 flex flex-col items-center justify-center overflow-hidden"
     >
-      <div className="absolute top-0 right-0 pointer-events-none overflow-hidden z-0">
+      <div
+        className="absolute top-0 right-0 pointer-events-none overflow-hidden z-0"
+        style={{
+          transform: `translate3d(${fruitPos.x}px, ${fruitPos.y}px, 0px) scale(${fruitPos.scale})`,
+          opacity: fruitPos.opacity ?? 0.04,
+        }}
+      >
         <img
           ref={bgWebRef}
           src={WEB}
           alt="Background Web"
-          className="w-[500px] h-[500px] md:w-[700px] md:h-[700px] object-contain opacity-[0.04] mix-blend-multiply translate-x-1/4 -translate-y-1/4"
+          className="w-[500px] h-[500px] md:w-[700px] md:h-[700px] object-contain mix-blend-multiply translate-x-1/4 -translate-y-1/4"
         />
       </div>
 
@@ -298,6 +334,16 @@ export default function Projects() {
           </div>
         ))}
       </div>
+
+      {/* Floating Joystick Alignment Tool */}
+      <JoystickController
+        stickPos={stickPos}
+        setStickPos={setStickPos}
+        gear5Pos={gear5Pos}
+        setGear5Pos={setGear5Pos}
+        fruitPos={fruitPos}
+        setFruitPos={setFruitPos}
+      />
     </section>
   )
 }
