@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -6,6 +6,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 const WEB = '/assets/web.png'
 const LUFFY_GEAR5 = '/assets/luffy-gear5.png'
+const PROJECT_STICK = '/assets/project-stick.png'
 
 const PROJECTS = [
   {
@@ -45,8 +46,81 @@ const PROJECTS = [
 export default function Projects() {
   const sectionRef = useRef(null)
   const headerRef = useRef(null)
+  const stickRef = useRef(null)
+  const stickImgRef = useRef(null)
   const bgWebRef = useRef(null)
   const luffyRef = useRef(null)
+
+  // Cursor-following spotlight mask animation (matching Hero mask)
+  const stickSpot = useRef({
+    x: 100,
+    y: 50,
+    alpha: 1,
+    size: 50,
+  }).current
+  const stickXTo = useRef(null)
+  const stickYTo = useRef(null)
+
+  useEffect(() => {
+    stickXTo.current = gsap.quickTo(stickSpot, 'x', { duration: 0.3, ease: 'power4.out' })
+    stickYTo.current = gsap.quickTo(stickSpot, 'y', { duration: 0.3, ease: 'power4.out' })
+
+    const update = () => {
+      if (!stickImgRef.current) return
+      const { x, y, alpha, size } = stickSpot
+      const gradient = `radial-gradient(circle ${size}px at ${x}px ${y}px, rgba(0,0,0,${alpha}) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,1) 100%)`
+      stickImgRef.current.style.webkitMaskImage = gradient
+      stickImgRef.current.style.maskImage = gradient
+    }
+
+    update()
+    gsap.ticker.add(update)
+    return () => gsap.ticker.remove(update)
+  }, [stickSpot])
+
+  const handleStickMouseMove = (e) => {
+    if (!stickImgRef.current) return
+    const rect = stickImgRef.current.getBoundingClientRect()
+    stickXTo.current?.(e.clientX - rect.left)
+    stickYTo.current?.(e.clientY - rect.top)
+  }
+
+  const handleStickMouseEnter = () => {
+    gsap.to(stickSpot, {
+      alpha: 0,
+      size: 160,
+      duration: 0.8,
+      ease: 'elastic.out(1, 0.7)',
+      overwrite: 'auto',
+    })
+  }
+
+  const handleStickMouseLeave = () => {
+    gsap.to(stickSpot, {
+      alpha: 1,
+      size: 50,
+      duration: 1.2,
+      ease: 'power4.inOut',
+      overwrite: 'auto',
+    })
+  }
+
+  // User aligned positions (saved from alignment tool)
+  const stickPos = (() => {
+    try {
+      const saved = localStorage.getItem('anime_project_stick_pos')
+      if (saved) return JSON.parse(saved)
+    } catch {}
+    return { x: 0, y: 0, scale: 1, zIndex: 20 }
+  })()
+
+  const gear5Pos = (() => {
+    try {
+      const saved = localStorage.getItem('anime_project_gear5_pos')
+      if (saved) return JSON.parse(saved)
+    } catch {}
+    return { x: 0, y: 0, scale: 1 }
+  })()
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -109,7 +183,10 @@ export default function Projects() {
     <section
       id="projects"
       ref={sectionRef}
-      className="relative w-full bg-white text-gray-900 py-16 px-6 md:px-16 lg:px-24 flex flex-col items-center justify-center overflow-hidden border-t border-gray-100"
+      onMouseMove={handleStickMouseMove}
+      onMouseEnter={handleStickMouseEnter}
+      onMouseLeave={handleStickMouseLeave}
+      className="relative w-full bg-white text-gray-900 py-16 px-6 md:px-16 lg:px-24 flex flex-col items-center justify-center overflow-hidden"
     >
       <div className="absolute top-0 right-0 pointer-events-none overflow-hidden z-0">
         <img
@@ -120,28 +197,56 @@ export default function Projects() {
         />
       </div>
 
+      {/* Luffy Gear 5 */}
       <div
-        ref={luffyRef}
         className="absolute bottom-2 md:bottom-8 left-2 sm:left-4 md:left-8 lg:left-12 z-30 pointer-events-none"
+        style={{
+          transform: `translate3d(${gear5Pos.x}px, ${gear5Pos.y}px, 0px) scale(${gear5Pos.scale})`,
+        }}
       >
-        <img
-          src={LUFFY_GEAR5}
-          alt="Monkey D. Luffy Gear 5"
-          className="w-36 sm:w-48 md:w-60 lg:w-72 h-auto object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.2)]"
-        />
+        <div ref={luffyRef} className="pointer-events-none">
+          <img
+            src={LUFFY_GEAR5}
+            alt="Monkey D. Luffy Gear 5"
+            className="w-36 sm:w-48 md:w-60 lg:w-72 h-auto object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.2)] select-none pointer-events-none"
+            draggable={false}
+          />
+        </div>
       </div>
 
-      <div ref={headerRef} className="flex flex-col items-center text-center mb-10 z-10">
-        <span className="text-[#a31515] font-bold uppercase text-[10px] md:text-xs tracking-[0.2em] mb-2">
-          Featured Works
-        </span>
-        <h2
-          className="text-3xl md:text-5xl font-black tracking-tighter uppercase italic text-gray-900"
-          style={{ textShadow: '2px 2px 0px #fca5a5' }}
+      <div className="flex flex-col items-center text-center mb-10 z-10 relative">
+        {/* Luffy Peeking */}
+        <div
+          className="relative origin-bottom select-none pointer-events-none"
+          style={{
+            transform: `translate3d(${stickPos.x}px, ${stickPos.y}px, 0px) scale(${stickPos.scale})`,
+            zIndex: stickPos.zIndex ?? 20,
+          }}
         >
-          PROJECTS.
-        </h2>
-        <div className="w-12 h-1 bg-[#a31515] mt-2 rounded-full" />
+          <div
+            ref={stickRef}
+            className="relative pointer-events-none -mb-3 sm:-mb-5 md:-mb-6 origin-bottom"
+          >
+            <img
+              ref={stickImgRef}
+              src={PROJECT_STICK}
+              alt="Luffy Peeking"
+              className="w-32 sm:w-40 md:w-48 lg:w-56 h-auto object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] select-none pointer-events-none"
+              style={{ WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat' }}
+              draggable={false}
+            />
+          </div>
+        </div>
+
+        <div ref={headerRef} className="flex flex-col items-center">
+          <h2
+            className="text-3xl md:text-5xl font-black tracking-tighter uppercase italic text-gray-900 relative z-10"
+            style={{ textShadow: '2px 2px 0px #fca5a5' }}
+          >
+            FEATURED PROJECTS.
+          </h2>
+          <div className="w-12 h-1 bg-[#a31515] mt-2 rounded-full" />
+        </div>
       </div>
 
       <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 z-10">

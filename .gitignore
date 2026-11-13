@@ -7,6 +7,7 @@ _site
 
 # Visual-regression output
 screenshots
+.playwright-mcp
 
 *.local
 .DS_Store

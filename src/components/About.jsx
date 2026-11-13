@@ -50,7 +50,7 @@ export default function About() {
         )
         .fromTo(
           photoRef.current,
-          { y: -250, opacity: 0 },
+          { y: -120, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out' },
           '<0.05',
         )
@@ -128,7 +128,7 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative w-full min-h-screen bg-gray-50 text-gray-900 py-24 flex items-center justify-center overflow-hidden"
+      className="relative w-full bg-white text-gray-900 py-16 md:py-20 flex items-center justify-center overflow-hidden"
     >
       <div
         ref={webLeftRef}
@@ -154,7 +154,7 @@ export default function About() {
         />
       </div>
 
-      <div className="container mx-auto px-6 md:px-12 lg:px-24 flex flex-col-reverse lg:flex-row items-center lg:items-start gap-12 lg:gap-20 z-10 relative">
+      <div className="container mx-auto px-6 md:px-12 lg:px-24 flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-20 z-10 relative">
         <div className="flex-1 flex flex-col gap-6 mt-10 lg:mt-0 relative z-20">
           <div className="overflow-hidden">
             <span
@@ -206,9 +206,9 @@ export default function About() {
           </div>
         </div>
 
-        <div className="flex-1 relative flex justify-center items-start min-h-[550px] w-full pt-0">
+        <div className="flex-1 relative flex justify-center items-center w-full pt-0">
           <div ref={photoRef} className="flex flex-col items-center z-30 group">
-            <div className="w-[2px] h-[200px] md:h-[350px] bg-gradient-to-b from-transparent via-[#a31515]/60 to-[#a31515]" />
+            <div className="w-[2px] h-16 md:h-24 bg-gradient-to-b from-transparent via-[#a31515]/60 to-[#a31515]" />
             <div className="glow-frame relative w-64 h-64 md:w-[340px] md:h-[340px] rounded-full border-[6px] border-[#a31515] p-2 bg-white shadow-2xl transition-transform duration-500 group-hover:scale-105">
               <img
                 src={PROFILE}

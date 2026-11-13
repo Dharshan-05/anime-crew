@@ -6,7 +6,6 @@ import AOS from 'aos'
 gsap.registerPlugin(ScrollTrigger)
 
 const HERO_MASK = '/assets/hero-mask.png'
-const HERO_BASE = '/assets/hero-portrait.png'
 const WEB = '/assets/web.png'
 const SPIDER = '/assets/spider.png'
 
@@ -92,12 +91,6 @@ export default function Hero() {
           { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: 'back.out(2)' },
           '-=0.8',
         )
-        .fromTo(
-          maskRef.current,
-          { x: 100, opacity: 0, scale: 0.95 },
-          { x: 0, opacity: 1, scale: 1, duration: 1.2, ease: 'back.out(1.5)' },
-          '-=1.2',
-        )
 
       gsap.to(webRef.current.children, {
         rotation: 360,
@@ -140,21 +133,20 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
-  // Subtle parallax tilt / floating effect for Luffy in the right corner
+  // Cursor-following spotlight mask over the top hero layer.
   useEffect(() => {
-    xTo.current = gsap.quickTo(spot, 'x', { duration: 0.5, ease: 'power3.out' })
-    yTo.current = gsap.quickTo(spot, 'y', { duration: 0.5, ease: 'power3.out' })
+    xTo.current = gsap.quickTo(spot, 'x', { duration: 0.3, ease: 'power4.out' })
+    yTo.current = gsap.quickTo(spot, 'y', { duration: 0.3, ease: 'power4.out' })
 
     const update = () => {
       if (!maskRef.current) return
-      const offsetX = (spot.x - window.innerWidth / 2) * 0.02
-      const offsetY = (spot.y - window.innerHeight / 2) * 0.02
-      gsap.set(maskRef.current, {
-        x: offsetX,
-        y: offsetY,
-      })
+      const { x, y, alpha, size } = spot
+      const gradient = `radial-gradient(circle ${size}px at ${x}px ${y}px, rgba(0,0,0,${alpha}) 0%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,1) 100%)`
+      maskRef.current.style.webkitMaskImage = gradient
+      maskRef.current.style.maskImage = gradient
     }
 
+    update()
     gsap.ticker.add(update)
     return () => gsap.ticker.remove(update)
   }, [spot])
@@ -208,40 +200,21 @@ export default function Hero() {
     <main className="w-full flex flex-col bg-white overflow-hidden">
       <section
         ref={sectionRef}
-        className="relative w-full h-screen overflow-hidden flex items-center justify-center cursor-crosshair"
+        className="relative w-full h-screen overflow-hidden flex items-center bg-white cursor-crosshair"
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <img
-          src={HERO_BASE}
-          alt="Bottom Identity Layer"
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-10"
-        />
-        <div
-          ref={maskRef}
-          className="absolute top-0 right-0 bottom-0 z-20 pointer-events-none flex items-end justify-end"
-        >
-          <img
-            src={HERO_MASK}
-            alt="Luffy Gear 5"
-            className="h-full max-h-screen w-auto object-contain object-right drop-shadow-[-15px_15px_30px_rgba(0,0,0,0.15)]"
-          />
-        </div>
-
-        <div ref={webRef} className="absolute inset-0 pointer-events-none z-[25] overflow-hidden">
+        {/* Decorative corner webs */}
+        <div ref={webRef} className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
           <img
             src={WEB}
             alt="Spider Web Top"
             className="absolute top-0 left-0 w-44 h-44 sm:w-64 sm:h-64 md:w-[400px] md:h-[400px] object-contain opacity-40 sm:opacity-50 -translate-x-1/4 -translate-y-1/4 mix-blend-multiply"
           />
-          <img
-            src={WEB}
-            alt="Spider Web Bottom"
-            className="absolute bottom-0 right-0 w-52 h-52 sm:w-72 sm:h-72 md:w-[500px] md:h-[500px] object-contain opacity-40 sm:opacity-50 translate-x-1/4 translate-y-1/4 mix-blend-multiply"
-          />
         </div>
 
+        {/* Hero Text / Info */}
         <div className="absolute top-1/2 -translate-y-1/2 left-6 md:left-12 lg:left-24 z-30 flex flex-col gap-3 pointer-events-none drop-shadow-md max-w-lg w-full">
           <span
             ref={kickerRef}
@@ -284,10 +257,21 @@ export default function Hero() {
             </a>
           </div>
         </div>
+
+        {/* Foreground Character Image with Cursor-Following Radial Mask */}
+        <div className="absolute right-0 bottom-0 z-20 pointer-events-none flex items-end justify-end w-full h-[40vh] sm:h-[48vh] md:h-full overflow-hidden">
+          <img
+            ref={maskRef}
+            src={HERO_MASK}
+            alt="Top Mask Layer"
+            className="w-full h-full object-contain object-right-bottom md:object-cover md:object-right select-none"
+            style={{ WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat' }}
+          />
+        </div>
       </section>
 
       <section
-        className="relative w-full h-[20vh] md:h-[30vh] bg-white overflow-hidden flex items-center justify-center z-40"
+        className="relative w-full h-44 sm:h-52 md:h-60 bg-white overflow-hidden flex items-center justify-center z-40"
         onMouseEnter={slowMarquee}
         onMouseLeave={resumeMarquee}
         aria-label="Skills marquee"
