@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import JoystickController from './JoystickController.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -9,21 +8,21 @@ const WEB = '/assets/web.png'
 const LUFFY_GEAR5 = '/assets/luffy-gear5.png'
 const PROJECT_STICK = '/assets/project-stick.png'
 
-// Default aligned coordinates (baked in for production / Vercel)
-export const DEFAULT_STICK_POS = {
+// Aligned character coordinates
+const STICK_POS = {
   x: 7,
   y: 33,
   scale: 0.86,
   zIndex: 20,
 }
 
-export const DEFAULT_GEAR5_POS = {
+const GEAR5_POS = {
   x: 0,
   y: 0,
   scale: 1,
 }
 
-export const DEFAULT_FRUIT_POS = {
+const FRUIT_POS = {
   x: 0,
   y: 0,
   scale: 1,
@@ -127,30 +126,9 @@ export default function Projects() {
     })
   }
 
-  // User aligned positions (saved from alignment tool / joystick)
-  const [stickPos, setStickPos] = useState(() => {
-    try {
-      const saved = localStorage.getItem('anime_project_stick_pos')
-      if (saved) return JSON.parse(saved)
-    } catch {}
-    return DEFAULT_STICK_POS
-  })
-
-  const [gear5Pos, setGear5Pos] = useState(() => {
-    try {
-      const saved = localStorage.getItem('anime_project_gear5_pos')
-      if (saved) return JSON.parse(saved)
-    } catch {}
-    return DEFAULT_GEAR5_POS
-  })
-
-  const [fruitPos, setFruitPos] = useState(() => {
-    try {
-      const saved = localStorage.getItem('anime_project_fruit_pos')
-      if (saved) return JSON.parse(saved)
-    } catch {}
-    return DEFAULT_FRUIT_POS
-  })
+  const stickPos = STICK_POS
+  const gear5Pos = GEAR5_POS
+  const fruitPos = FRUIT_POS
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -334,16 +312,6 @@ export default function Projects() {
           </div>
         ))}
       </div>
-
-      {/* Floating Joystick Alignment Tool */}
-      <JoystickController
-        stickPos={stickPos}
-        setStickPos={setStickPos}
-        gear5Pos={gear5Pos}
-        setGear5Pos={setGear5Pos}
-        fruitPos={fruitPos}
-        setFruitPos={setFruitPos}
-      />
     </section>
   )
 }
